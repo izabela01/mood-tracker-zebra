@@ -1,0 +1,60 @@
+@startuml Mood Tracker App ERD
+
+' Zero or One  = |o--
+' Exactly One  = ||--
+' Zero or Many = }o--
+' One or Many  = }|--
+
+entity Users {
+  * id: BINARY(16) <<generated>>
+  --
+  * email: VARCHAR(320)
+  * password: VARCHAR(2048) <<hashed>>
+}
+
+entity Moods {
+  * id: BINARY(16) <<generated>>
+  --
+  * name: VARCHAR(1024)
+  * description: VARCHAR(2048)
+}
+
+entity MoodEntries {
+  * id: BINARY(16) <<generated>>
+  --
+  * user_id: BINARY(16) <<foreign key>>
+  * time: DATETIME
+  * scale: TINYINT (-5 to 5, where 0 is true neutral mood)
+  notes: VARCHAR(1024)
+}
+
+entity MoodLookup {
+  * id: BINARY(16) <<generated>>
+  --
+  * mood_entry_id: BINARY(16) <<foreign key>>
+  * mood_id: BINARY(16) <<foreign key>>
+}
+
+entity Groups {
+  * id: BINARY(16) <<generated>>
+  --
+  * group_id: BINARY(16) <<foreign key>>
+  * group_name: BINARY(16)
+}
+
+entity UserGroups {
+  * id: BINARY(16) <<generated>>
+  --
+  * group_id: BINARY(16) <<foreign key>>
+  * user_id: BINARY(16) <<foreign key>>
+}
+
+Users ||--o{ MoodEntries
+Users ||--o{ UserGroups
+
+UserGroups }o--|| Groups
+
+Moods ||--o{ MoodLookup
+MoodEntries ||--|{ MoodLookup
+
+@enduml
