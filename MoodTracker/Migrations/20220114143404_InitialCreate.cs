@@ -169,7 +169,7 @@ namespace MoodTracker.Migrations
                 name: "MoodEntry",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
+                    ID = table.Column<Guid>(nullable: false),
                     UserID = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     MoodScore = table.Column<int>(nullable: false),
@@ -192,14 +192,15 @@ namespace MoodTracker.Migrations
                 {
                     ID = table.Column<string>(nullable: false),
                     MoodEntryID = table.Column<string>(nullable: true),
-                    MoodID = table.Column<string>(nullable: true)
+                    MoodID = table.Column<string>(nullable: true),
+                    MoodEntryID1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MoodLookup", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_MoodLookup_MoodEntry_MoodEntryID",
-                        column: x => x.MoodEntryID,
+                        name: "FK_MoodLookup_MoodEntry_MoodEntryID1",
+                        column: x => x.MoodEntryID1,
                         principalTable: "MoodEntry",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
@@ -254,9 +255,9 @@ namespace MoodTracker.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoodLookup_MoodEntryID",
+                name: "IX_MoodLookup_MoodEntryID1",
                 table: "MoodLookup",
-                column: "MoodEntryID");
+                column: "MoodEntryID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MoodLookup_MoodID",

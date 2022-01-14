@@ -9,7 +9,7 @@ using MoodTracker.Data;
 namespace MoodTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220114115040_InitialCreate")]
+    [Migration("20220114143404_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,7 +232,8 @@ namespace MoodTracker.Migrations
 
             modelBuilder.Entity("MoodTracker.Models.MoodEntry", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -262,12 +263,15 @@ namespace MoodTracker.Migrations
                     b.Property<string>("MoodEntryID")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("MoodEntryID1")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MoodID")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MoodEntryID");
+                    b.HasIndex("MoodEntryID1");
 
                     b.HasIndex("MoodID");
 
@@ -336,7 +340,7 @@ namespace MoodTracker.Migrations
                 {
                     b.HasOne("MoodTracker.Models.MoodEntry", "MoodEntry")
                         .WithMany("Moods")
-                        .HasForeignKey("MoodEntryID");
+                        .HasForeignKey("MoodEntryID1");
 
                     b.HasOne("MoodTracker.Models.Mood", "Mood")
                         .WithMany()
