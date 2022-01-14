@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MoodTracker.Data.Migrations
+namespace MoodTracker.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,19 @@ namespace MoodTracker.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mood",
+                columns: table => new
+                {
+                    ID = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mood", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +165,52 @@ namespace MoodTracker.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MoodEntry",
+                columns: table => new
+                {
+                    ID = table.Column<string>(nullable: false),
+                    UserID = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    MoodScore = table.Column<int>(nullable: false),
+                    Notes = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MoodEntry", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MoodEntry_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MoodLookup",
+                columns: table => new
+                {
+                    ID = table.Column<string>(nullable: false),
+                    MoodEntryID = table.Column<string>(nullable: true),
+                    MoodID = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MoodLookup", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MoodLookup_MoodEntry_MoodEntryID",
+                        column: x => x.MoodEntryID,
+                        principalTable: "MoodEntry",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MoodLookup_Mood_MoodID",
+                        column: x => x.MoodID,
+                        principalTable: "Mood",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -188,6 +247,21 @@ namespace MoodTracker.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoodEntry_UserID",
+                table: "MoodEntry",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoodLookup_MoodEntryID",
+                table: "MoodLookup",
+                column: "MoodEntryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoodLookup_MoodID",
+                table: "MoodLookup",
+                column: "MoodID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -208,7 +282,16 @@ namespace MoodTracker.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "MoodLookup");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "MoodEntry");
+
+            migrationBuilder.DropTable(
+                name: "Mood");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
