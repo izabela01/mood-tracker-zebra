@@ -23,7 +23,7 @@ namespace MoodTracker.Pages.MoodEntries
         [BindProperty]
         public MoodEntry MoodEntry { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -31,13 +31,13 @@ namespace MoodTracker.Pages.MoodEntries
             }
 
             MoodEntry = await _context.MoodEntries
-                .Include(m => m.User).FirstOrDefaultAsync(m => m.ID == id);
+                .Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
             {
                 return NotFound();
             }
-           ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
+           ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return Page();
         }
 
@@ -58,7 +58,7 @@ namespace MoodTracker.Pages.MoodEntries
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MoodEntryExists(MoodEntry.ID))
+                if (!MoodEntryExists(MoodEntry.Id))
                 {
                     return NotFound();
                 }
@@ -71,9 +71,9 @@ namespace MoodTracker.Pages.MoodEntries
             return RedirectToPage("./Index");
         }
 
-        private bool MoodEntryExists(Guid id)
+        private bool MoodEntryExists(int id)
         {
-            return _context.MoodEntries.Any(e => e.ID == id);
+            return _context.MoodEntries.Any(e => e.Id == id);
         }
     }
 }

@@ -6,16 +6,16 @@ namespace MoodTracker.Models
 {
     public class MoodEntry
     {
+        public int Id { get; set; }
+
+        public string UserId { get; set; }
         public IdentityUser User { get; set; }
-        public Guid ID { get; set; }
-        public string UserID { get; set; }
+
         public DateTime Date { get; set; }
         public int MoodScore { get; set; }
         public string Notes { get; set; }
 
-
         public ICollection<MoodLookup> Moods { get; set; }
-
     }
 
 

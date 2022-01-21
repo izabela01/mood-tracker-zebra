@@ -21,7 +21,7 @@ namespace MoodTracker.Pages.MoodEntries
 
         public IActionResult OnGet()
         {
-        ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
+        ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return Page();
         }
 

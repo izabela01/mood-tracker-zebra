@@ -22,7 +22,7 @@ namespace MoodTracker.Pages.MoodEntries
         [BindProperty]
         public MoodEntry MoodEntry { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -30,7 +30,7 @@ namespace MoodTracker.Pages.MoodEntries
             }
 
             MoodEntry = await _context.MoodEntries
-                .Include(m => m.User).FirstOrDefaultAsync(m => m.ID == id);
+                .Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
             {
@@ -39,7 +39,7 @@ namespace MoodTracker.Pages.MoodEntries
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid? id)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
             {

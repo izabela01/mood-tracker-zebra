@@ -21,7 +21,7 @@ namespace MoodTracker.Pages.MoodEntries
 
         public MoodEntry MoodEntry { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -29,7 +29,7 @@ namespace MoodTracker.Pages.MoodEntries
             }
 
             MoodEntry = await _context.MoodEntries
-                .Include(m => m.User).FirstOrDefaultAsync(m => m.ID == id);
+                .Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
             {
