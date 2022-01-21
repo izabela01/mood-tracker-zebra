@@ -47,7 +47,7 @@ entity Moods {
 }
 
 entity MoodEntries {
-  * Id: TEXT <<generated>>
+  * Id: INTEGER <<generated>>
   --
   * UserId: TEXT <<foreign key>>
   * Time: DATETIME
