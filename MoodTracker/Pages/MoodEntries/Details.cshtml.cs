@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Data;
 using MoodTracker.Models;
+using MoodTracker.Extensions;
 
 namespace MoodTracker.Pages.MoodEntries
 {
@@ -33,11 +34,9 @@ namespace MoodTracker.Pages.MoodEntries
                 return NotFound();
             }
 
-            string currentUserId = _userManager.GetUserId(User);
-
             MoodEntry = await _context.MoodEntries
                 .Include(m => m.User)
-                .Where(m => m.User.Id == currentUserId)
+                .Where(m => m.User.Id == User.GetId())
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
