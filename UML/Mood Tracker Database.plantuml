@@ -5,54 +5,67 @@
 ' Zero or Many = }o--
 ' One or Many  = }|--
 
-entity Users {
-  * id: BINARY(16) <<generated>>
-  --
-  * email: VARCHAR(320)
-  * password: VARCHAR(2048) <<hashed>>
+package "ASP.NET provided tables" <<Rectangle>> {
+  entity AspNetUsers {
+    * Id: TEXT <<generated>>
+    --
+    * Email: TEXT
+    * PasswordHash: TEXT
+    ...
+  }
+
+  entity AspNetRoles {
+    * Id: TEXT <<generated>>
+    --
+    ...
+  }
+
+  entity AspNetUserRoles {
+    * UserId & RoleId <<composite primary key>>
+    --
+    * UserId: TEXT <<foreign key>>
+    * RoleId: TEXT <<foreign key>>
+  }
+  ' TODO:
+  ' entity AspNetUserClaims {
+  '   * Id: TEXT <<generated>>
+  '   --
+  '   ...
+  ' }
+  ' entity AspNetRoleClaims {
+  '   * Id: INTEGER <<generated>>
+  '   --
+  '   ...
+  ' }
 }
 
 entity Moods {
-  * id: BINARY(16) <<generated>>
+  * Id: INTEGER <<generated>>
   --
-  * name: VARCHAR(1024)
-  * description: VARCHAR(2048)
+  * Name: VARCHAR(1024)
+  * Description: VARCHAR(2048)
 }
 
 entity MoodEntries {
-  * id: BINARY(16) <<generated>>
+  * Id: INTEGER <<generated>>
   --
-  * user_id: BINARY(16) <<foreign key>>
-  * time: DATETIME
-  * scale: TINYINT (-5 to 5, where 0 is true neutral mood)
-  notes: VARCHAR(1024)
+  * UserId: TEXT <<foreign key>>
+  * Time: DATETIME
+  * Scale: TINYINT (-5 to 5, where 0 is true neutral mood)
+  Notes: VARCHAR(1024)
 }
 
 entity MoodLookup {
-  * id: BINARY(16) <<generated>>
+  * MoodEntryId & MoodId <<composite primary key>>
   --
-  * mood_entry_id: BINARY(16) <<foreign key>>
-  * mood_id: BINARY(16) <<foreign key>>
+  * MoodEntryId: TEXT <<foreign key>>
+  * MoodId: TEXT <<foreign key>>
 }
 
-entity Groups {
-  * id: BINARY(16) <<generated>>
-  --
-  * group_id: BINARY(16) <<foreign key>>
-  * group_name: BINARY(16)
-}
+AspNetUsers ||--o{ MoodEntries
+AspNetUsers ||--o{ AspNetUserRoles
 
-entity UserGroups {
-  * id: BINARY(16) <<generated>>
-  --
-  * group_id: BINARY(16) <<foreign key>>
-  * user_id: BINARY(16) <<foreign key>>
-}
-
-Users ||--o{ MoodEntries
-Users ||--o{ UserGroups
-
-UserGroups }o--|| Groups
+AspNetUserRoles }o--|| AspNetRoles
 
 Moods ||--o{ MoodLookup
 MoodEntries ||--|{ MoodLookup
