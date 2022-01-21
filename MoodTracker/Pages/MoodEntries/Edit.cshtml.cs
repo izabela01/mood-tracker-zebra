@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Data;
 using MoodTracker.Extensions;
@@ -56,7 +53,7 @@ namespace MoodTracker.Pages.MoodEntries
                 return NotFound();
             }
 
-            if (await TryUpdateModelAsync<MoodEntry>(
+            if (await TryUpdateModelAsync(
                 moodEntryToUpdate,
                 "MoodEntry",
                 m => m.Date, m => m.MoodScore, m => m.Notes))

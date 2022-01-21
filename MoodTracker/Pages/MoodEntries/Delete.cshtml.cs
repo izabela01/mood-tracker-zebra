@@ -13,9 +13,9 @@ namespace MoodTracker.Pages.MoodEntries
 {
     public class DeleteModel : PageModel
     {
-        private readonly MoodTracker.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DeleteModel(MoodTracker.Data.ApplicationDbContext context)
+        public DeleteModel(ApplicationDbContext context)
         {
             _context = context;
         }

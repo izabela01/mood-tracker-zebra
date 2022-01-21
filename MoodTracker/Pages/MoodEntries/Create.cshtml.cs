@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +12,9 @@ namespace MoodTracker.Pages.MoodEntries
     [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly MoodTracker.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(MoodTracker.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -36,7 +33,7 @@ namespace MoodTracker.Pages.MoodEntries
         {
             MoodEntry newMoodEntry = new MoodEntry();
 
-            if (await TryUpdateModelAsync<MoodEntry>(
+            if (await TryUpdateModelAsync(
                 newMoodEntry,
                 "MoodEntry",
                 m => m.Date, s => s.MoodScore, s => s.Notes))
