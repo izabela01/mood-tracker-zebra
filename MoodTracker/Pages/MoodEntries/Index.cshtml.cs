@@ -8,6 +8,7 @@ using MoodTracker.Data;
 using MoodTracker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using MoodTracker.Extensions;
 
 namespace MoodTracker.Pages.MoodEntries
 {
@@ -27,12 +28,9 @@ namespace MoodTracker.Pages.MoodEntries
 
         public async Task OnGetAsync()
         {
-            // No need for null checks, due to unreachable code path when user is not logged in which is forced by the Authorize attribute
-            string currentUserId = _userManager.GetUserId(User);
-
-            MoodEntry = await _context.MoodEntries
+           MoodEntry = await _context.MoodEntries
                 .Include(m => m.User)
-                .Where(m => m.UserId == currentUserId)
+                .Where(m => m.UserId == User.GetId())
                 .ToListAsync();
         }
     }
