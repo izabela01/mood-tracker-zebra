@@ -47,16 +47,17 @@ namespace MoodTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mood",
+                name: "Moods",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mood", x => x.ID);
+                    table.PrimaryKey("PK_Moods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,48 +167,50 @@ namespace MoodTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MoodEntry",
+                name: "MoodEntries",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
-                    UserID = table.Column<string>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     MoodScore = table.Column<int>(nullable: false),
                     Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoodEntry", x => x.ID);
+                    table.PrimaryKey("PK_MoodEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MoodEntry_AspNetUsers_UserID",
-                        column: x => x.UserID,
+                        name: "FK_MoodEntries_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MoodLookup",
+                name: "MoodLookups",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
-                    MoodEntryID = table.Column<string>(nullable: true),
-                    MoodID = table.Column<string>(nullable: true)
+                    MoodEntryId = table.Column<string>(nullable: false),
+                    MoodId = table.Column<string>(nullable: false),
+                    MoodEntryId1 = table.Column<int>(nullable: true),
+                    MoodId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoodLookup", x => x.ID);
+                    table.PrimaryKey("PK_MoodLookups", x => new { x.MoodEntryId, x.MoodId });
                     table.ForeignKey(
-                        name: "FK_MoodLookup_MoodEntry_MoodEntryID",
-                        column: x => x.MoodEntryID,
-                        principalTable: "MoodEntry",
-                        principalColumn: "ID",
+                        name: "FK_MoodLookups_MoodEntries_MoodEntryId1",
+                        column: x => x.MoodEntryId1,
+                        principalTable: "MoodEntries",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MoodLookup_Mood_MoodID",
-                        column: x => x.MoodID,
-                        principalTable: "Mood",
-                        principalColumn: "ID",
+                        name: "FK_MoodLookups_Moods_MoodId1",
+                        column: x => x.MoodId1,
+                        principalTable: "Moods",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -249,19 +252,19 @@ namespace MoodTracker.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoodEntry_UserID",
-                table: "MoodEntry",
-                column: "UserID");
+                name: "IX_MoodEntries_UserId",
+                table: "MoodEntries",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoodLookup_MoodEntryID",
-                table: "MoodLookup",
-                column: "MoodEntryID");
+                name: "IX_MoodLookups_MoodEntryId1",
+                table: "MoodLookups",
+                column: "MoodEntryId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoodLookup_MoodID",
-                table: "MoodLookup",
-                column: "MoodID");
+                name: "IX_MoodLookups_MoodId1",
+                table: "MoodLookups",
+                column: "MoodId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -282,16 +285,16 @@ namespace MoodTracker.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "MoodLookup");
+                name: "MoodLookups");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "MoodEntry");
+                name: "MoodEntries");
 
             migrationBuilder.DropTable(
-                name: "Mood");
+                name: "Moods");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

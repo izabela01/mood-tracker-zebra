@@ -23,9 +23,10 @@ namespace MoodTracker.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Mood>().ToTable("Mood");
-            modelBuilder.Entity<MoodEntry>().ToTable("MoodEntry");
-            modelBuilder.Entity<MoodLookup>().ToTable("MoodLookup");
+            modelBuilder.Entity<Mood>().ToTable("Moods");
+            modelBuilder.Entity<MoodEntry>().ToTable("MoodEntries");
+            modelBuilder.Entity<MoodLookup>().ToTable("MoodLookups")
+                .HasKey(moodLookup => new { moodLookup.MoodEntryId, moodLookup.MoodId });
         }
 
 

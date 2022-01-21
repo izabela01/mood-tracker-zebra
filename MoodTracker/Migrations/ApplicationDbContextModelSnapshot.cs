@@ -214,8 +214,9 @@ namespace MoodTracker.Migrations
 
             modelBuilder.Entity("MoodTracker.Models.Mood", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -223,15 +224,16 @@ namespace MoodTracker.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Mood");
+                    b.ToTable("Moods");
                 });
 
             modelBuilder.Entity("MoodTracker.Models.MoodEntry", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
@@ -242,34 +244,37 @@ namespace MoodTracker.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("MoodEntry");
+                    b.ToTable("MoodEntries");
                 });
 
             modelBuilder.Entity("MoodTracker.Models.MoodLookup", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<string>("MoodEntryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MoodEntryID")
+                    b.Property<string>("MoodId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MoodID")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("MoodEntryId1")
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.Property<int?>("MoodId1")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("MoodEntryID");
+                    b.HasKey("MoodEntryId", "MoodId");
 
-                    b.HasIndex("MoodID");
+                    b.HasIndex("MoodEntryId1");
 
-                    b.ToTable("MoodLookup");
+                    b.HasIndex("MoodId1");
+
+                    b.ToTable("MoodLookups");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -327,18 +332,18 @@ namespace MoodTracker.Migrations
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MoodTracker.Models.MoodLookup", b =>
                 {
                     b.HasOne("MoodTracker.Models.MoodEntry", "MoodEntry")
                         .WithMany("Moods")
-                        .HasForeignKey("MoodEntryID");
+                        .HasForeignKey("MoodEntryId1");
 
                     b.HasOne("MoodTracker.Models.Mood", "Mood")
                         .WithMany()
-                        .HasForeignKey("MoodID");
+                        .HasForeignKey("MoodId1");
                 });
 #pragma warning restore 612, 618
         }
