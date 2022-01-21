@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Data;
+using MoodTracker.Extensions;
 using MoodTracker.Models;
 
 namespace MoodTracker.Pages.MoodEntries
@@ -30,7 +31,9 @@ namespace MoodTracker.Pages.MoodEntries
             }
 
             MoodEntry = await _context.MoodEntries
-                .Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
+                .Include(m => m.User)
+                .Where(m => m.UserId == User.GetId())
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
             {
@@ -48,7 +51,7 @@ namespace MoodTracker.Pages.MoodEntries
 
             MoodEntry = await _context.MoodEntries.FindAsync(id);
 
-            if (MoodEntry != null)
+            if (MoodEntry != null && MoodEntry.UserId == User.GetId())
             {
                 _context.MoodEntries.Remove(MoodEntry);
                 await _context.SaveChangesAsync();
