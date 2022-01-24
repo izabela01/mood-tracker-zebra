@@ -46,7 +46,10 @@
                 <input asp-for="MoodEntry.Notes" class="form-control" />
                 <span asp-validation-for="MoodEntry.Notes" class="text-danger"></span>
             </div>
+
             <input type="button" value="Add Tag" class="btn btn-secondary" />
+            <input type="hidden" id="tag-list" name="tagList">
+
             <div class="form-group">
                 <label asp-for="MoodEntry.Notes" class="control-label"></label>
                 <input asp-for="MoodEntry.Notes" class="form-control" />
@@ -66,10 +69,22 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        const tagArray = [];
+
         $("button").click(function () {
             if ($(this).hasClass("mood-selector")) {
-                console.log("TEST" + $(this).attr('id');
+                const selectedMoodId = $(this).attr('id')
+                console.log("TEST" + selectedMoodId);
+                
+                if (!tagArray.includes(selectedMoodId)) {
+                    tagArray.push(selectedMoodId);
+                }
+
+                const tagArrayString = tagArrayString.join();
+
+                $("#tag-list").attr("value", tagArrayString);
             }
         });
+
     </script>
 }
