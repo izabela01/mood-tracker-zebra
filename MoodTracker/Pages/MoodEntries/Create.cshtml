@@ -5,24 +5,6 @@
 @{ ViewData["Title"] = "Create";
 }
 
-<div class="modal fade" tabindex="-1" role="dialog" id="details-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Product Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"]) {
-                <div class="mood-selector" id="@mood.Id">@mood.Name</div>
-            }
-            </div>
-        </div>
-    </div>
-</div>
-
 <h1>Create</h1>
 
 <h4>MoodEntry</h4>
@@ -48,7 +30,13 @@
             </div>
 
             <input type="button" value="Add Tag" class="btn btn-secondary" />
-            <input type="hidden" id="tag-list" name="tagList">
+
+            <div class="form-group">
+                @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"]) {
+                    <label class="control-label">@mood.Name</label>
+                    <input type="checkbox" name="selectedMoods" value="@mood.Id" />
+                }
+            <div class="form-group">
 
             <div class="form-group">
                 <label asp-for="MoodEntry.Notes" class="control-label"></label>
@@ -68,23 +56,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        const tagArray = [];
-
-        $("button").click(function () {
-            if ($(this).hasClass("mood-selector")) {
-                const selectedMoodId = $(this).attr('id')
-                console.log("TEST" + selectedMoodId);
-                
-                if (!tagArray.includes(selectedMoodId)) {
-                    tagArray.push(selectedMoodId);
-                }
-
-                const tagArrayString = tagArrayString.join();
-
-                $("#tag-list").attr("value", tagArrayString);
-            }
-        });
-
-    </script>
 }

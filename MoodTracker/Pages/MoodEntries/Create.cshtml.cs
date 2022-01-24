@@ -29,7 +29,7 @@ namespace MoodTracker.Pages.MoodEntries
         public MoodEntry MoodEntry { get; set; }
 
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedCourses)
         {
             MoodEntry newMoodEntry = new MoodEntry();
 
