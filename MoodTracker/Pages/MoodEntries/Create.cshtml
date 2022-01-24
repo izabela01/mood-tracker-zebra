@@ -1,9 +1,27 @@
 @page
 @model MoodTracker.Pages.MoodEntries.CreateModel
+@using MoodTracker.Models
 
-@{
-    ViewData["Title"] = "Create";
+@{ ViewData["Title"] = "Create";
 }
+
+<div class="modal fade" tabindex="-1" role="dialog" id="details-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Product Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"]) {
+                <div class="mood-selector" id="@mood.Id">@mood.Name</div>
+            }
+            </div>
+        </div>
+    </div>
+</div>
 
 <h1>Create</h1>
 
@@ -28,6 +46,12 @@
                 <input asp-for="MoodEntry.Notes" class="form-control" />
                 <span asp-validation-for="MoodEntry.Notes" class="text-danger"></span>
             </div>
+            <input type="button" value="Add Tag" class="btn btn-secondary" />
+            <div class="form-group">
+                <label asp-for="MoodEntry.Notes" class="control-label"></label>
+                <input asp-for="MoodEntry.Notes" class="form-control" />
+                <span asp-validation-for="MoodEntry.Notes" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -41,4 +65,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("button").click(function () {
+            if ($(this).hasClass("mood-selector")) {
+                console.log("TEST" + $(this).attr('id');
+            }
+        });
+    </script>
 }
