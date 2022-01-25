@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -30,8 +32,11 @@ namespace MoodTracker.Pages.MoodEntries
                 return NotFound();
             }
 
+            ViewData["Moods"] = _context.Moods;
+
             MoodEntry = await _context.MoodEntries
                 .Include(m => m.User)
+                .Include(m => m.Moods)
                 .Where(m => m.UserId == User.GetId())
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -43,12 +48,15 @@ namespace MoodTracker.Pages.MoodEntries
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAsync(int id, int[] selectedMoods)
         {
-            MoodEntry moodEntryToUpdate = await _context.MoodEntries.FindAsync(id);
+            MoodEntry moodEntryToUpdate = await _context.MoodEntries
+                .Include(moodEntry => moodEntry.Moods)
+                .Where(moodEntry => moodEntry.UserId == User.GetId())
+                .Where(moodEntry => moodEntry.Id == id)
+                .FirstAsync();
 
-            if ((moodEntryToUpdate == null) &&
-                (moodEntryToUpdate.UserId == User.GetId()))
+            if (moodEntryToUpdate == null)
             {
                 return NotFound();
             }
@@ -58,6 +66,29 @@ namespace MoodTracker.Pages.MoodEntries
                 "MoodEntry",
                 m => m.Date, m => m.MoodScore, m => m.Notes))
             {
+                List<int> currentlyEnabledMoodIds = new List<int>();
+
+                // Remove tags that are enabled now but not given in post request
+                foreach (var currentlyEnabledMood in moodEntryToUpdate.Moods)
+                {
+                    currentlyEnabledMoodIds.Add(currentlyEnabledMood.Id);
+
+                    if(!selectedMoods.Contains(currentlyEnabledMood.Id))
+                    {
+                        moodEntryToUpdate.Moods.Remove(currentlyEnabledMood);
+                    }
+                }
+
+                // Add mood tags
+                foreach (var selectedMoodId in selectedMoods)
+                {
+                    var moodToAdd = _context.Moods.Single(mood => mood.Id == selectedMoodId);
+
+                    if (moodToAdd != null && !currentlyEnabledMoodIds.Contains(selectedMoodId))
+                    {
+                        moodEntryToUpdate.Moods.Add(moodToAdd);
+                    }
+                }
 
                 try
                 {
@@ -77,6 +108,13 @@ namespace MoodTracker.Pages.MoodEntries
 
             }
 
+            var a = string.Join(",",
+                    ModelState.Values.Where(E => E.Errors.Count > 0)
+                    .SelectMany(E => E.Errors)
+                    .Select(E => E.ErrorMessage + E.Exception)
+                    .ToArray());
+
+            var b = ModelState.Values.Where(E => E.Errors.Count > 0);
             return RedirectToPage("./Index");
         }
 
