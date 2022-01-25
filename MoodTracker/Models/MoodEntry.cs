@@ -6,6 +6,11 @@ namespace MoodTracker.Models
 {
     public class MoodEntry
     {
+        public MoodEntry()
+        {
+            Moods = new HashSet<Mood>();
+        }
+
         public int Id { get; set; }
 
         public string UserId { get; set; }
@@ -15,7 +20,7 @@ namespace MoodTracker.Models
         public int MoodScore { get; set; }
         public string Notes { get; set; }
 
-        public ICollection<Mood> Moods { get; set; }
+        public virtual ICollection<Mood> Moods { get; set; }
     }
 
 

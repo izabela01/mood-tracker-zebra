@@ -9,7 +9,7 @@ using MoodTracker.Data;
 namespace MoodTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220125181139_InitialCreate")]
+    [Migration("20220125181535_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
