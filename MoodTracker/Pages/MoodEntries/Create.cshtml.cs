@@ -39,7 +39,7 @@ namespace MoodTracker.Pages.MoodEntries
             if (await TryUpdateModelAsync(
                 newMoodEntry,
                 "MoodEntry",
-                m => m.Date, s => s.MoodScore, s => s.Notes))
+                m => m.Date, m => m.MoodScore, m => m.Notes))
             {
                 newMoodEntry.UserId = User.GetId();
 
