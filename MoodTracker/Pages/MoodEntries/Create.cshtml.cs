@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +32,10 @@ namespace MoodTracker.Pages.MoodEntries
         public MoodEntry MoodEntry { get; set; }
 
 
-        public async Task<IActionResult> OnPostAsync(string[] selectedCourses)
+        public async Task<IActionResult> OnPostAsync(int[] selectedMoods)
         {
             MoodEntry newMoodEntry = new MoodEntry();
+            newMoodEntry.Moods = new Collection<MoodLookup>();
 
             if (await TryUpdateModelAsync(
                 newMoodEntry,
@@ -39,6 +43,18 @@ namespace MoodTracker.Pages.MoodEntries
                 m => m.Date, s => s.MoodScore, s => s.Notes))
             {
                 newMoodEntry.UserId = User.GetId();
+
+                foreach (var moodIdToAdd in selectedMoods) {
+                    Mood moodToAdd = _context.Moods.Single(mood => mood.Id == moodIdToAdd);
+
+                    MoodLookup moodLookupToAdd = new MoodLookup
+                    {
+                        MoodEntry = newMoodEntry,
+                        Mood = moodToAdd
+                    };
+
+                    newMoodEntry.Moods.Add(moodLookupToAdd);
+                }
 
                 _context.MoodEntries.Add(newMoodEntry);
 

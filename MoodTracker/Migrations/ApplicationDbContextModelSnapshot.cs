@@ -256,23 +256,15 @@ namespace MoodTracker.Migrations
 
             modelBuilder.Entity("MoodTracker.Models.MoodLookup", b =>
                 {
-                    b.Property<string>("MoodEntryId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MoodId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("MoodEntryId1")
+                    b.Property<int>("MoodEntryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("MoodId1")
+                    b.Property<int>("MoodId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("MoodEntryId", "MoodId");
 
-                    b.HasIndex("MoodEntryId1");
-
-                    b.HasIndex("MoodId1");
+                    b.HasIndex("MoodId");
 
                     b.ToTable("MoodLookups");
                 });
@@ -339,11 +331,15 @@ namespace MoodTracker.Migrations
                 {
                     b.HasOne("MoodTracker.Models.MoodEntry", "MoodEntry")
                         .WithMany("Moods")
-                        .HasForeignKey("MoodEntryId1");
+                        .HasForeignKey("MoodEntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MoodTracker.Models.Mood", "Mood")
                         .WithMany()
-                        .HasForeignKey("MoodId1");
+                        .HasForeignKey("MoodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -192,26 +192,24 @@ namespace MoodTracker.Migrations
                 name: "MoodLookups",
                 columns: table => new
                 {
-                    MoodEntryId = table.Column<string>(nullable: false),
-                    MoodId = table.Column<string>(nullable: false),
-                    MoodEntryId1 = table.Column<int>(nullable: true),
-                    MoodId1 = table.Column<int>(nullable: true)
+                    MoodEntryId = table.Column<int>(nullable: false),
+                    MoodId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MoodLookups", x => new { x.MoodEntryId, x.MoodId });
                     table.ForeignKey(
-                        name: "FK_MoodLookups_MoodEntries_MoodEntryId1",
-                        column: x => x.MoodEntryId1,
+                        name: "FK_MoodLookups_MoodEntries_MoodEntryId",
+                        column: x => x.MoodEntryId,
                         principalTable: "MoodEntries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MoodLookups_Moods_MoodId1",
-                        column: x => x.MoodId1,
+                        name: "FK_MoodLookups_Moods_MoodId",
+                        column: x => x.MoodId,
                         principalTable: "Moods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -257,14 +255,9 @@ namespace MoodTracker.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoodLookups_MoodEntryId1",
+                name: "IX_MoodLookups_MoodId",
                 table: "MoodLookups",
-                column: "MoodEntryId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MoodLookups_MoodId1",
-                table: "MoodLookups",
-                column: "MoodId1");
+                column: "MoodId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
