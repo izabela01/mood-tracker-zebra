@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace MoodTracker.Models
 {
     public class Mood
@@ -6,5 +7,7 @@ namespace MoodTracker.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public ICollection<MoodEntry> MoodEntries { get; set; }
     }
 }

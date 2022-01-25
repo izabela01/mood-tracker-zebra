@@ -41,7 +41,7 @@ namespace MoodTracker
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage(); TODO: deprecated handle it pls
             }
             else
             {

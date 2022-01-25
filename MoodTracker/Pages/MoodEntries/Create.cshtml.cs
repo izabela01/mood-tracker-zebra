@@ -35,7 +35,6 @@ namespace MoodTracker.Pages.MoodEntries
         public async Task<IActionResult> OnPostAsync(int[] selectedMoods)
         {
             MoodEntry newMoodEntry = new MoodEntry();
-            newMoodEntry.Moods = new Collection<MoodLookup>();
 
             if (await TryUpdateModelAsync(
                 newMoodEntry,
@@ -44,16 +43,10 @@ namespace MoodTracker.Pages.MoodEntries
             {
                 newMoodEntry.UserId = User.GetId();
 
-                foreach (var moodIdToAdd in selectedMoods) {
+                foreach (var moodIdToAdd in selectedMoods)
+                {
                     Mood moodToAdd = _context.Moods.Single(mood => mood.Id == moodIdToAdd);
-
-                    MoodLookup moodLookupToAdd = new MoodLookup
-                    {
-                        MoodEntry = newMoodEntry,
-                        Mood = moodToAdd
-                    };
-
-                    newMoodEntry.Moods.Add(moodLookupToAdd);
+                    newMoodEntry.Moods.Add(moodToAdd);
                 }
 
                 _context.MoodEntries.Add(newMoodEntry);

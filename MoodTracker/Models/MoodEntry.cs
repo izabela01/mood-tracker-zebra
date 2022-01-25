@@ -15,7 +15,7 @@ namespace MoodTracker.Models
         public int MoodScore { get; set; }
         public string Notes { get; set; }
 
-        public ICollection<MoodLookup> Moods { get; set; }
+        public ICollection<Mood> Moods { get; set; }
     }
 
 

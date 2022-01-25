@@ -31,7 +31,8 @@
 
 
             <div class="form-group">
-                @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"]) {
+                @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"])
+                {
                     <label class="control-label">@mood.Name</label>
                     <input type="checkbox" name="selectedMoods" value="@mood.Id" />
                 }

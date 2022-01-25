@@ -1,9 +1,8 @@
 @page
 @model MoodTracker.Pages.MoodEntries.EditModel
+@using MoodTracker.Models
 
-@{
-    ViewData["Title"] = "Edit";
-}
+@{ ViewData["Title"] = "Edit"; }
 
 <h1>Edit</h1>
 
@@ -28,6 +27,15 @@
                 <input asp-for="MoodEntry.Notes" class="form-control" />
                 <span asp-validation-for="MoodEntry.Notes" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"])
+                {
+                    <label class="control-label">@mood.Name</label>
+                    <input type="checkbox" name="selectedMoods" value="@mood.Id" />
+                }
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
