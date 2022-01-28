@@ -1,21 +1,23 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Data;
+using MoodTracker.Extensions;
 using MoodTracker.Models;
 
 namespace MoodTracker.Pages.MoodEntries
 {
+    [Authorize]
     public class EditModel : PageModel
     {
-        private readonly MoodTracker.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(MoodTracker.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,44 +32,89 @@ namespace MoodTracker.Pages.MoodEntries
                 return NotFound();
             }
 
+            ViewData["Moods"] = _context.Moods;
+
             MoodEntry = await _context.MoodEntries
-                .Include(m => m.User).FirstOrDefaultAsync(m => m.Id == id);
+                .Include(m => m.User)
+                .Include(m => m.Moods)
+                .Where(m => m.UserId == User.GetId())
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (MoodEntry == null)
             {
                 return NotFound();
             }
-           ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id, int[] selectedMoods)
         {
-            if (!ModelState.IsValid)
+            MoodEntry moodEntryToUpdate = await _context.MoodEntries
+                .Include(moodEntry => moodEntry.Moods)
+                .Where(moodEntry => moodEntry.UserId == User.GetId())
+                .Where(moodEntry => moodEntry.Id == id)
+                .FirstAsync();
+
+            if (moodEntryToUpdate == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(MoodEntry).State = EntityState.Modified;
+            if (await TryUpdateModelAsync(
+                moodEntryToUpdate,
+                "MoodEntry",
+                m => m.Date, m => m.MoodScore, m => m.Notes))
+            {
+                List<int> currentlyEnabledMoodIds = new List<int>();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MoodEntryExists(MoodEntry.Id))
+                // Remove tags that are enabled now but not given in post request
+                foreach (var currentlyEnabledMood in moodEntryToUpdate.Moods)
                 {
-                    return NotFound();
+                    currentlyEnabledMoodIds.Add(currentlyEnabledMood.Id);
+
+                    if(!selectedMoods.Contains(currentlyEnabledMood.Id))
+                    {
+                        moodEntryToUpdate.Moods.Remove(currentlyEnabledMood);
+                    }
                 }
-                else
+
+                // Add mood tags
+                foreach (var selectedMoodId in selectedMoods)
                 {
-                    throw;
+                    var moodToAdd = _context.Moods.Single(mood => mood.Id == selectedMoodId);
+
+                    if (moodToAdd != null && !currentlyEnabledMoodIds.Contains(selectedMoodId))
+                    {
+                        moodEntryToUpdate.Moods.Add(moodToAdd);
+                    }
                 }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MoodEntryExists(MoodEntry.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
             }
 
+            var a = string.Join(",",
+                    ModelState.Values.Where(E => E.Errors.Count > 0)
+                    .SelectMany(E => E.Errors)
+                    .Select(E => E.ErrorMessage + E.Exception)
+                    .ToArray());
+
+            var b = ModelState.Values.Where(E => E.Errors.Count > 0);
             return RedirectToPage("./Index");
         }
 

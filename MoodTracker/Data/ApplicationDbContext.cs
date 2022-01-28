@@ -20,19 +20,25 @@ namespace MoodTracker.Data
 
         public DbSet<Mood> Moods { get; set; }
         public DbSet<MoodEntry> MoodEntries { get; set; }
-        public DbSet<MoodLookup> MoodLookups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
 
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Mood>().ToTable("Moods");
-            modelBuilder.Entity<MoodEntry>().ToTable("MoodEntries");
-            modelBuilder.Entity<MoodLookup>().ToTable("MoodLookups")
-                .HasKey(moodLookup => new { moodLookup.MoodEntryId, moodLookup.MoodId });
 
-           // DbIntializer.Initialize(options, modelBuilder);
+
+            modelBuilder
+                .Entity<MoodEntry>()
+                .ToTable("MoodEntries")
+                .HasMany(moodEntry => moodEntry.Moods)
+                .WithMany(mood => mood.MoodEntries)
+                .UsingEntity(j => j.ToTable("MoodLookup"));
+
+            modelBuilder
+                .Entity<Mood>()
+                .ToTable("Moods");
+
 
         }
 

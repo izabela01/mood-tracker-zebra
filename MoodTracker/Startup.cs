@@ -30,9 +30,10 @@ namespace MoodTracker
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +42,7 @@ namespace MoodTracker
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage(); TODO: deprecated handle it pls
             }
             else
             {
