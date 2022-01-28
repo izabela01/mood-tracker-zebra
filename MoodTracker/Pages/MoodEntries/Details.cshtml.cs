@@ -36,6 +36,7 @@ namespace MoodTracker.Pages.MoodEntries
 
             MoodEntry = await _context.MoodEntries
                 .Include(m => m.User)
+                .Include(m => m.Moods)
                 .Where(m => m.User.Id == User.GetId())
                 .FirstOrDefaultAsync(m => m.Id == id);
 
