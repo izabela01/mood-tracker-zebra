@@ -12,17 +12,13 @@ namespace MoodTracker.Data
         {
 
 
-            // Look for any moodEntries.
-            if (context.MoodEntries.Any())
+            if (!context.Users.Any())
             {
-                return;   // DB has been seeded
-            }
 
+                var hasher = new PasswordHasher<IdentityUser>();
 
-            var hasher = new PasswordHasher<IdentityUser>();
-
-            var users = new IdentityUser[]
-                {
+                var users = new IdentityUser[]
+                    {
 
                             new IdentityUser
                             {
@@ -57,12 +53,17 @@ namespace MoodTracker.Data
                             EmailConfirmed = true,
                             PasswordHash = hasher.HashPassword(null, "Password!123")
                         },
-                };
+                    };
 
-            context.Users.AddRange(users);
-            context.SaveChanges();
+                context.Users.AddRange(users);
+                context.SaveChanges();
+            }
 
-            var moods = new Mood[]
+
+            if (!context.Moods.Any())
+            {
+
+                var moods = new Mood[]
              {
                 new Mood{Id = 1, Name = "Happy", Description = "" },
                 new Mood{Id = 2, Name = "Sad", Description = "" },
@@ -72,8 +73,9 @@ namespace MoodTracker.Data
                 new Mood{Id = 6, Name = "Suprised", Description = ""},
              };
 
-            context.Moods.AddRange(moods);
-            context.SaveChanges();
+                context.Moods.AddRange(moods);
+                context.SaveChanges();
+            };
         }
     }
 }
