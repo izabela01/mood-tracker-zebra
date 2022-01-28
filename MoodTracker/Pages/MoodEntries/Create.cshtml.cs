@@ -31,7 +31,6 @@ namespace MoodTracker.Pages.MoodEntries
         [BindProperty]
         public MoodEntry MoodEntry { get; set; }
 
-
         public async Task<IActionResult> OnPostAsync(int[] selectedMoods)
         {
             MoodEntry newMoodEntry = new MoodEntry();
