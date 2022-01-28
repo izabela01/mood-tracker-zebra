@@ -41,11 +41,10 @@ namespace MoodTracker
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    var config = services.GetRequiredService<IConfiguration>();
+                   var context = services.GetRequiredService<ApplicationDbContext>();
+                   var config = services.GetRequiredService<IConfiguration>();
                    var seed_DB =  config.GetValue<Boolean>("seedDB");
 
-                    //var modelBuilder = services.GetRequiredService<ApplicationDbContext>();
                     if (seed_DB)
                     {
                         DbIntializer.Initialize(context);

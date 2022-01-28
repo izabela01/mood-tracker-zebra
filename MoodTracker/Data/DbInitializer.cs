@@ -62,15 +62,6 @@ namespace MoodTracker.Data
             context.Users.AddRange(users);
             context.SaveChanges();
 
-            var moodEntries = new MoodEntry[]
-             {
-                   // int Id , IdentityUser User, DateTime Date, int MoodScore , string Notes, ICollection<MoodLookup> Moods
-                    new MoodEntry{}
-             };
-
-            // Happy Sad Scared Discusted Angry Suprised
-            // Id, Name, Description
-
             var moods = new Mood[]
              {
                 new Mood{Id = 1, Name = "Happy", Description = "" },
