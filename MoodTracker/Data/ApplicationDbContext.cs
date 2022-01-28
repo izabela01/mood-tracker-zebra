@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Models;
+using MoodTracker.Data;
+
 
 namespace MoodTracker.Data
 {
@@ -11,7 +13,7 @@ namespace MoodTracker.Data
     {
 
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public  ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
@@ -22,11 +24,16 @@ namespace MoodTracker.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
+
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Mood>().ToTable("Moods");
             modelBuilder.Entity<MoodEntry>().ToTable("MoodEntries");
             modelBuilder.Entity<MoodLookup>().ToTable("MoodLookups")
                 .HasKey(moodLookup => new { moodLookup.MoodEntryId, moodLookup.MoodId });
+
+           // DbIntializer.Initialize(options, modelBuilder);
+
         }
 
 
