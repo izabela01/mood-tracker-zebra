@@ -42,8 +42,9 @@ namespace MoodTracker
                    var context = services.GetRequiredService<ApplicationDbContext>();
                    var config = services.GetRequiredService<IConfiguration>();
                    var seed_DB =  config.GetValue<Boolean>("seedDB");
-
-                    if (seed_DB)
+                   context.Database.EnsureCreated();
+                   
+                   if (seed_DB)
                     {
                         DbIntializer.Initialize(context);
                     }
