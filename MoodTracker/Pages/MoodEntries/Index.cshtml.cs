@@ -15,6 +15,11 @@ namespace MoodTracker.Pages.MoodEntries
     [Authorize]
     public class IndexModel : PageModel
     {
+        private const string ASCENDING_STRING = "ascending";
+        private const string DESCENDING_STRING = "descending";
+        private const string SCORE_STRING = "score";
+        private const string DATE_STRING = "date";
+        
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -26,12 +31,30 @@ namespace MoodTracker.Pages.MoodEntries
 
         public IList<MoodEntry> MoodEntry { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortColumn, string sortOrder)
         {
-           MoodEntry = await _context.MoodEntries
+            sortOrder ??= ASCENDING_STRING;
+            sortColumn ??= DATE_STRING;
+            
+            IQueryable<MoodEntry> moodEntryQuery = _context.MoodEntries
                 .Include(m => m.User)
-                .Where(m => m.UserId == User.GetId())
-                .ToListAsync();
+                .Where(m => m.UserId == User.GetId());
+
+            ColumnOrder columnOrder = sortOrder switch
+            {
+                ASCENDING_STRING => ColumnOrder.Ascending,
+                DESCENDING_STRING => ColumnOrder.Descending,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            moodEntryQuery = sortColumn switch
+            {
+                DATE_STRING => moodEntryQuery.OrderBy(entry => entry.Date, columnOrder),
+                SCORE_STRING => moodEntryQuery.OrderBy(entry => entry.MoodScore, columnOrder),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            MoodEntry = await moodEntryQuery.ToListAsync();
         }
     }
 }
