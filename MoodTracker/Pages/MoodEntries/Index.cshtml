@@ -1,4 +1,5 @@
 @page
+@using Microsoft.Data.SqlClient
 @model MoodTracker.Pages.MoodEntries.IndexModel
 
 @{
@@ -14,10 +15,18 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].Date)
+                <a asp-page="./Index"
+                   asp-route-sortColumn="@IndexModel.DATE_COLUMN_STRING"
+                   asp-route-sortOrder="@(Model.CurrentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)">
+                    @Model.DateColumnTitle
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].MoodScore)
+                <a asp-page="./Index" 
+                   asp-route-sortColumn="@IndexModel.SCORE_COLUMN_STRING"
+                   asp-route-sortOrder="@(Model.CurrentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)">
+                    @Model.ScoreColumnTitle
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MoodEntry[0].Notes)

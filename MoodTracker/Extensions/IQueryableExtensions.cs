@@ -1,23 +1,24 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.Data.SqlClient;
 using MoodTracker.Models;
 
 namespace MoodTracker.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static IOrderedQueryable<TSource> OrderBy<TSource, TKey>
-            (this IQueryable<TSource> queryable, Expression<Func<TSource, TKey>> keySelector, ColumnOrder columnOrder)
+        public static IQueryable<TSource> OrderBy<TSource, TKey>
+            (this IQueryable<TSource> queryable, Expression<Func<TSource, TKey>> keySelector, SortOrder sortOrder)
         {
-            if (columnOrder == ColumnOrder.Ascending) return queryable.OrderBy(keySelector);
-            return queryable.OrderByDescending(keySelector);
+            IQueryable<TSource> queryToReturn = sortOrder switch
+            {
+                SortOrder.Ascending => queryable.OrderBy(keySelector),
+                SortOrder.Descending => queryable.OrderByDescending(keySelector),
+                _ => queryable
+            };
+
+            return queryToReturn;
         }
-    }
-    
-    public enum ColumnOrder
-    {
-        Ascending,
-        Descending
     }
 }
