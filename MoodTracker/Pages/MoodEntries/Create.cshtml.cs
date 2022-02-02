@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MoodTracker.Data;
 using MoodTracker.Extensions;
 using MoodTracker.Models;
@@ -31,7 +29,7 @@ namespace MoodTracker.Pages.MoodEntries
         [BindProperty]
         public MoodEntry MoodEntry { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(int[] selectedMoods)
+        public async Task<IActionResult> OnPostAsync(IEnumerable<int> selectedMoods)
         {
             MoodEntry newMoodEntry = new MoodEntry();
 

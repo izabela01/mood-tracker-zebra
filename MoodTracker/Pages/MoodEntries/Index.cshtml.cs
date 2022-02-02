@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MoodTracker.Data;
 using MoodTracker.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
 using MoodTracker.Extensions;
@@ -20,12 +19,10 @@ namespace MoodTracker.Pages.MoodEntries
         public const string DATE_COLUMN_STRING = "date";
         
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
         
-        public IndexModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         public IList<MoodEntry> MoodEntry { get;set; }
