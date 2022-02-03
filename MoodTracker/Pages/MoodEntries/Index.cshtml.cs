@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -20,40 +21,37 @@ namespace MoodTracker.Pages.MoodEntries
         
         private readonly ApplicationDbContext _context;
         
+        public IList<MoodEntry> MoodEntry { get;set; }
+        public Dictionary<string, SortedColumnData> ColumnDataLookup { get; }
+
         public IndexModel(ApplicationDbContext context)
         {
             _context = context;
+            
+            ColumnDataLookup = new()
+            {
+                {DATE_COLUMN_STRING, new SortedColumnData(DATE_COLUMN_STRING)},
+                {SCORE_COLUMN_STRING, new SortedColumnData(SCORE_COLUMN_STRING)}
+            };
         }
-
-        public IList<MoodEntry> MoodEntry { get;set; }
-        public string DateColumnTitle { get; set; }
-        public string ScoreColumnTitle { get; set; }
-        public SortOrder CurrentSortOrder { get; set; }
-
         
         public async Task OnGetAsync(string sortColumn=DATE_COLUMN_STRING, SortOrder sortOrder=SortOrder.Descending)
         {
-            string orderIcon = sortOrder switch
-            {
-                SortOrder.Ascending => " ▲",
-                SortOrder.Descending => " ▼",
-                _ => " [UNSORTED]"
-            };
+            var currentColumnData = ColumnDataLookup[sortColumn];
+            currentColumnData.Active = true;
+            currentColumnData.CurrentSortOrder = sortOrder;
             
-            CurrentSortOrder = sortOrder;
-            DateColumnTitle = DATE_COLUMN_STRING + (sortColumn==DATE_COLUMN_STRING ? orderIcon : "");
-            ScoreColumnTitle = SCORE_COLUMN_STRING + (sortColumn==SCORE_COLUMN_STRING ? orderIcon : "");
+            Expression<Func<MoodEntry, object>> keySelector = sortColumn switch
+            {
+                DATE_COLUMN_STRING => entry => entry.Date,
+                SCORE_COLUMN_STRING => entry => entry.MoodScore,
+                _ => throw new ArgumentOutOfRangeException(nameof(sortColumn), sortColumn, "sortColumn is invalid")
+            };
 
             IQueryable<MoodEntry> moodEntryQuery = _context.MoodEntries
                 .Include(m => m.User)
-                .Where(m => m.UserId == User.GetId());
-            
-            moodEntryQuery = sortColumn switch
-            {
-                DATE_COLUMN_STRING => moodEntryQuery.OrderBy(entry => entry.Date, sortOrder),
-                SCORE_COLUMN_STRING => moodEntryQuery.OrderBy(entry => entry.MoodScore, sortOrder),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                .Where(m => m.UserId == User.GetId())
+                .OrderBy(keySelector, sortOrder);
             
             MoodEntry = await moodEntryQuery.ToListAsync();
         }

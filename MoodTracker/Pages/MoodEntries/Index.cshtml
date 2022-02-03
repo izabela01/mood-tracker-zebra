@@ -17,15 +17,15 @@
             <th>
                 <a asp-page="./Index"
                    asp-route-sortColumn="@IndexModel.DATE_COLUMN_STRING"
-                   asp-route-sortOrder="@(Model.CurrentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)">
-                    @Model.DateColumnTitle
+                   asp-route-sortOrder="@(Model.ColumnDataLookup[IndexModel.DATE_COLUMN_STRING].GetNextSortOrder())">
+                    @Model.ColumnDataLookup[IndexModel.DATE_COLUMN_STRING].GetFormattedTitle()
                 </a>
             </th>
             <th>
                 <a asp-page="./Index" 
                    asp-route-sortColumn="@IndexModel.SCORE_COLUMN_STRING"
-                   asp-route-sortOrder="@(Model.CurrentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)">
-                    @Model.ScoreColumnTitle
+                   asp-route-sortOrder="@Model.ColumnDataLookup[IndexModel.SCORE_COLUMN_STRING].GetNextSortOrder()">
+                    @Model.ColumnDataLookup[IndexModel.SCORE_COLUMN_STRING].GetFormattedTitle()
                 </a>
             </th>
             <th>
