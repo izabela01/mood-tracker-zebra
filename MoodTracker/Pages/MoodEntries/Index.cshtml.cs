@@ -22,7 +22,7 @@ namespace MoodTracker.Pages.MoodEntries
         private readonly ApplicationDbContext _context;
         
         public IList<MoodEntry> MoodEntry { get;set; }
-        public Dictionary<string, SortedColumnData> ColumnDataLookup { get; }
+        public Dictionary<string, SortableColumnTitle> ColumnDataLookup { get; }
 
         public IndexModel(ApplicationDbContext context)
         {
@@ -30,8 +30,8 @@ namespace MoodTracker.Pages.MoodEntries
             
             ColumnDataLookup = new()
             {
-                {DATE_COLUMN_STRING, new SortedColumnData(DATE_COLUMN_STRING)},
-                {SCORE_COLUMN_STRING, new SortedColumnData(SCORE_COLUMN_STRING)}
+                {DATE_COLUMN_STRING, new SortableColumnTitle(DATE_COLUMN_STRING)},
+                {SCORE_COLUMN_STRING, new SortableColumnTitle(SCORE_COLUMN_STRING)}
             };
         }
         

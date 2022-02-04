@@ -2,9 +2,9 @@ using Microsoft.Data.SqlClient;
 
 namespace MoodTracker.Pages.MoodEntries
 {
-    public class SortedColumnData
+    public class SortableColumnTitle
     {
-        public SortedColumnData(string columnName)
+        public SortableColumnTitle(string columnName)
         {
             ColumnName = columnName;
             CurrentSortOrder = SortOrder.Descending;
