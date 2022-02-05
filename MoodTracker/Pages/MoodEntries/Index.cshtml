@@ -29,13 +29,13 @@
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].Notes)
+                @Html.DisplayNameFor(model => model.MoodEntriesList[0].Notes)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.MoodEntry) {
+@foreach (var item in Model.MoodEntriesList) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -55,3 +55,31 @@
 }
     </tbody>
 </table>
+
+@{
+    string GenerateButtonCssClass(bool enabled) => "btn btn-primary" + (enabled ?  "" : " disabled");
+
+    var previousButtonCss = GenerateButtonCssClass(Model.MoodEntriesList.HasPreviousPage);
+    var nextButtonCss = GenerateButtonCssClass(Model.MoodEntriesList.HasNextPage);
+}
+
+<div
+    class="text-center">
+    <a asp-page="./Index"
+       asp-route-sortColumn="@Model.CurrentSortingColumn"
+       asp-route-sortOrder="@Model.CurrentSortOrder"
+       asp-route-pageIndex="@(Model.MoodEntriesList.PageIndex - 1)"
+       role="button"
+       class="@previousButtonCss">
+        Previous
+    </a>
+
+    <a asp-page="./Index"
+       asp-route-sortColumn="@Model.CurrentSortingColumn"
+       asp-route-sortOrder="@Model.CurrentSortOrder"
+       asp-route-pageIndex="@(Model.MoodEntriesList.PageIndex + 1)"
+       role="button"
+       class="@nextButtonCss">
+        Next
+    </a>
+</div>

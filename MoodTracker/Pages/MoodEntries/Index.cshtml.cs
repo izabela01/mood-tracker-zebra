@@ -9,6 +9,7 @@ using MoodTracker.Data;
 using MoodTracker.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MoodTracker.Extensions;
 
 namespace MoodTracker.Pages.MoodEntries
@@ -20,10 +21,12 @@ namespace MoodTracker.Pages.MoodEntries
         public const string DATE_COLUMN_STRING = "date";
         
         private readonly ApplicationDbContext _context;
-        
-        public IList<MoodEntry> MoodEntry { get;set; }
-        public Dictionary<string, SortableColumnTitle> ColumnDataLookup { get; }
 
+        public string CurrentSortColumn { get; set; }
+        public PaginatedList<MoodEntry> MoodEntriesList { get; set; }
+        public Dictionary<string, SortableColumnTitle> ColumnDataLookup { get; }
+        public string CurrentSortingColumn { get; set; }
+        public SortOrder CurrentSortOrder { get; set; }
         public IndexModel(ApplicationDbContext context)
         {
             _context = context;
@@ -35,8 +38,11 @@ namespace MoodTracker.Pages.MoodEntries
             };
         }
         
-        public async Task OnGetAsync(string sortColumn=DATE_COLUMN_STRING, SortOrder sortOrder=SortOrder.Descending)
+        public async Task OnGetAsync(string sortColumn=DATE_COLUMN_STRING, SortOrder sortOrder=SortOrder.Descending, int pageIndex=0)
         {
+            CurrentSortingColumn = sortColumn;
+            CurrentSortOrder = sortOrder;
+            
             var currentColumnData = ColumnDataLookup[sortColumn];
             currentColumnData.Active = true;
             currentColumnData.CurrentSortOrder = sortOrder;
@@ -53,7 +59,7 @@ namespace MoodTracker.Pages.MoodEntries
                 .Where(m => m.UserId == User.GetId())
                 .OrderBy(keySelector, sortOrder);
             
-            MoodEntry = await moodEntryQuery.ToListAsync();
+            MoodEntriesList = await PaginatedList<MoodEntry>.CreateAsync(moodEntryQuery, pageIndex, 4);
         }
     }
 }
