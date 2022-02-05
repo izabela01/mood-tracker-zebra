@@ -13,7 +13,7 @@
 </p>
 
 <div>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
                 @foreach (var column in Model.MoodEntriesTable.Columns)
@@ -38,23 +38,23 @@
         <tbody>
         @foreach (var item in Model.MoodEntriesTable.PaginatedList)
         {
-            <tr>
-                <th scope="row">
-                    @Html.DisplayFor(modelItem => item.Date)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MoodScore)
-                </td>
-                <td>
-                    <div
-                        style="display: flex; justify-content: flex-end;">
-                        @foreach (var mood in item.Moods)
-                        {
-                            <span style="font-size: 1.1em;" class="badge badge-primary mr-1">@Html.DisplayFor(modelItem => mood.Name)</span>
-                        }
-                    </div>
-                </td>
-            </tr>
+                <tr style="cursor: pointer;" onclick="window.location='/MoodEntries/Details?id=@item.Id';">
+                    <th scope="row">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MoodScore)
+                    </td>
+                    <td>
+                        <div
+                            style="display: flex; justify-content: flex-end;">
+                            @foreach (var mood in item.Moods)
+                            {
+                                <span style="font-size: 1.1em;" class="badge badge-primary mr-1">@Html.DisplayFor(modelItem => mood.Name)</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
         }
         </tbody>
     </table>
