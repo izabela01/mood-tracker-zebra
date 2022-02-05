@@ -17,36 +17,21 @@ namespace MoodTracker.Pages.MoodEntries
     [Authorize]
     public class IndexModel : PageModel
     {
-        public const string SCORE_COLUMN_STRING = "score";
-        public const string DATE_COLUMN_STRING = "date";
+        public const string DATE_COLUMN_STRING = nameof(MoodEntry.Date);
+        public const string SCORE_COLUMN_STRING = nameof(MoodEntry.MoodScore);
+        public const string MOOD_TAG_STRING = "MoodTags";
+        
+        public SortableTable<MoodEntry> MoodEntriesTable { get; set; }
         
         private readonly ApplicationDbContext _context;
 
-        public string CurrentSortColumn { get; set; }
-        public PaginatedList<MoodEntry> MoodEntriesList { get; set; }
-        public Dictionary<string, SortableColumnTitle> ColumnDataLookup { get; }
-        public string CurrentSortingColumn { get; set; }
-        public SortOrder CurrentSortOrder { get; set; }
         public IndexModel(ApplicationDbContext context)
         {
             _context = context;
-            
-            ColumnDataLookup = new()
-            {
-                {DATE_COLUMN_STRING, new SortableColumnTitle(DATE_COLUMN_STRING)},
-                {SCORE_COLUMN_STRING, new SortableColumnTitle(SCORE_COLUMN_STRING)}
-            };
         }
         
         public async Task OnGetAsync(string sortColumn=DATE_COLUMN_STRING, SortOrder sortOrder=SortOrder.Descending, int pageIndex=0)
         {
-            CurrentSortingColumn = sortColumn;
-            CurrentSortOrder = sortOrder;
-            
-            var currentColumnData = ColumnDataLookup[sortColumn];
-            currentColumnData.Active = true;
-            currentColumnData.CurrentSortOrder = sortOrder;
-            
             Expression<Func<MoodEntry, object>> keySelector = sortColumn switch
             {
                 DATE_COLUMN_STRING => entry => entry.Date,
@@ -56,10 +41,18 @@ namespace MoodTracker.Pages.MoodEntries
 
             IQueryable<MoodEntry> moodEntryQuery = _context.MoodEntries
                 .Include(m => m.User)
+                .Include(m => m.Moods)
                 .Where(m => m.UserId == User.GetId())
                 .OrderBy(keySelector, sortOrder);
             
-            MoodEntriesList = await PaginatedList<MoodEntry>.CreateAsync(moodEntryQuery, pageIndex, 4);
+            MoodEntriesTable = new SortableTable<MoodEntry>(new List<Column>()
+            {
+                new (DATE_COLUMN_STRING, true),
+                new (SCORE_COLUMN_STRING, true),
+                new (MOOD_TAG_STRING, false)
+            }, sortColumn, sortOrder);
+            
+            MoodEntriesTable.PaginatedList = await PaginatedList<MoodEntry>.CreateAsync(moodEntryQuery, pageIndex, 4);
         }
     }
 }
