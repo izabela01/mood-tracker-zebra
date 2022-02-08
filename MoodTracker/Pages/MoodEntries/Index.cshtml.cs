@@ -10,6 +10,7 @@ using MoodTracker.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using MoodTracker.Extensions;
 
 namespace MoodTracker.Pages.MoodEntries
@@ -24,9 +25,11 @@ namespace MoodTracker.Pages.MoodEntries
         public SortableTable<MoodEntry> MoodEntriesTable { get; set; }
         
         private readonly ApplicationDbContext _context;
+        private readonly int _pageSize;
 
-        public IndexModel(ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context, IConfiguration configuration)
         {
+            _pageSize = configuration.GetValue<int>("tablePageSize", 4);
             _context = context;
         }
         
@@ -52,7 +55,7 @@ namespace MoodTracker.Pages.MoodEntries
                 new (MOOD_TAG_STRING, false)
             }, sortColumn, sortOrder);
             
-            MoodEntriesTable.PaginatedList = await PaginatedList<MoodEntry>.CreateAsync(moodEntryQuery, pageIndex, 4);
+            MoodEntriesTable.PaginatedList = await PaginatedList<MoodEntry>.CreateAsync(moodEntryQuery, pageIndex, _pageSize);
         }
     }
 }
