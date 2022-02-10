@@ -3,54 +3,72 @@
 @using MoodTracker.Models
 @using System.ComponentModel.DataAnnotations
 
-@{ ViewData["Title"] = "Create";
+@{ ViewData["Title"] = "Create"; }
+
+@section Styles {
+    <link href="@Url.Content("~/css/Create.css")" rel="stylesheet" type="text/css" />
 }
 
-<h1>Create</h1>
 
-<h4>MoodEntry</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container-whole">
+<div class="form-container" >
+
+        <h4 class="the-text">Create Mood Entry </h4>
+        <form method="post" class="form-create">
+            <div asp-validation-summary="ModelOnly"></div>
             <div class="form-group">
                 <label asp-for="MoodEntry.Date" class="control-label"></label>
                 <input asp-for="MoodEntry.Date" class="form-control" />
                 <span asp-validation-for="MoodEntry.Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MoodEntry.MoodScore" class="control-label"></label>
-                <input type="range" 
-                       min="@(((RangeAttribute) ViewData["MoodSliderRange"]).Minimum)" 
-                       max="@(((RangeAttribute) ViewData["MoodSliderRange"]).Maximum)" 
-                       asp-for="MoodEntry.MoodScore" class="form-control" />
+            <div>
+                <label asp-for="MoodEntry.MoodScore" class="control-label">
+                    On the scale below, how are you feeling today?
+                </label>
+                <div className="slider-container">
+                    <input type="range"
+                           min="@(((RangeAttribute) ViewData["MoodSliderRange"]).Minimum)"
+                           max="@(((RangeAttribute) ViewData["MoodSliderRange"]).Maximum)"
+                           asp-for="MoodEntry.MoodScore" class="form-control" />
+                    <div class="images-slider">
+                        <img src="~/images/sad.png"
+                             class="rounded-circle" />
+                        <img src="~/images/neutral.png"
+                             class="rounded-circle" />
+                        <img src="~/images/happy.png"
+                             class="rounded-circle"/>
+
+                    </div>
+                </div>
                 <span asp-validation-for="MoodEntry.MoodScore" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MoodEntry.Notes" class="control-label"></label>
-                <input asp-for="MoodEntry.Notes" class="form-control" />
+                <label asp-for="MoodEntry.Notes" class="control-label">Journal Entry (optional)</label>
+                <textarea asp-for="MoodEntry.Notes" class="form-control" style="width: 100%; height:100px;">  </textarea>
                 <span asp-validation-for="MoodEntry.Notes" class="text-danger"></span>
             </div>
 
 
-            <div class="form-group">
+            <div class="form-group" style="display: flex; flex-direction:column; ">
                 @foreach (var mood in (IQueryable<Mood>)ViewData["Moods"])
                 {
-                    <label class="control-label">@mood.Name</label>
-                    <input type="checkbox" name="selectedMoods" value="@mood.Id" />
-                }
+    <div>
+        <input type="checkbox" name="selectedMoods" value="@mood.Id" />
+        <label class="control-label">@mood.Name</label>
+    </div>}
             </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
+            <input class="submit" type="submit" value="Create" class="btn btn-primary"  />
+
         </form>
-    </div>
+
 </div>
 
+    </div>
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index"  class="text-create">Back to List</a>
 </div>
 
 @section Scripts {
