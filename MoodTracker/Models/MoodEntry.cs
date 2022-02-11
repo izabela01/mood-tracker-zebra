@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace MoodTracker.Models
@@ -17,6 +18,8 @@ namespace MoodTracker.Models
         public IdentityUser User { get; set; }
 
         public DateTime Date { get; set; }
+        
+        [Range(-5,5)]
         public int MoodScore { get; set; }
         public string Notes { get; set; }
 

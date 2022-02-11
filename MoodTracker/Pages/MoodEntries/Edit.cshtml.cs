@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +34,8 @@ namespace MoodTracker.Pages.MoodEntries
             }
 
             ViewData["Moods"] = _context.Moods;
+            ViewData["MoodSliderRange"] =
+                typeof(MoodEntry).getAttributeForProperty<RangeAttribute>(nameof(Models.MoodEntry.MoodScore));
 
             MoodEntry = await _context.MoodEntries
                 .Include(m => m.User)
