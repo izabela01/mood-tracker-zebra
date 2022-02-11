@@ -9,5 +9,10 @@ namespace MoodTracker.Extensions
         {
             return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
+
+        public static bool IsLoggedIn(this ClaimsPrincipal user)
+        {
+            return user.Identity is {IsAuthenticated: true};
+        }
     }
 }
