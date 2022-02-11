@@ -1,0 +1,25 @@
+﻿
+.header-row{
+    background-color: white;
+}
+
+.header-text {
+    color: #f64f9e;
+}
+
+.btn-colour {
+    margin: 5px;
+    padding: 10px;
+    color: white;
+    background-color: #f64f9e;
+    border-radius: 15px
+}
+
+.title-index {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    display: flex;
+    justify-content: center;
+    align-text: center;
+}
+

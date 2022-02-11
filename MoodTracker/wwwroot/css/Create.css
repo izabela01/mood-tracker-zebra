@@ -18,7 +18,9 @@
 }
 
 .the-text {
-    color: #000000;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 @media only screen and (min-width: 600px) {
