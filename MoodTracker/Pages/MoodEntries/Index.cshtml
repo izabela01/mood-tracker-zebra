@@ -4,26 +4,28 @@
 
 @{ ViewData["Title"] = "Index"; }
 @section Styles {
-    <link href="@Url.Content("/Styles/Create.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/index.css")" rel="stylesheet" type="text/css" />
 }
 
+<div>
+    <h1 class="title-index">Reflective Space</h1>
 
-<h1>Index</h1>
+</div>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create" class="header-text">Create New</a>
 </p>
 
 <div>
     <table class="table table-hover">
-        <thead>
-            <tr>
+        <thead styles="color: white;" >
+            <tr class="header-row header-text"  >
                 @foreach (var column in Model.MoodEntriesTable.Columns)
                 {
-                    <th scope="col" style="width: 25%">
+                    <th scope="col" style="width: 25%" class="header-text">
                         @if (column.Sortable)
                         {
-                            <a asp-page="./Index"
+                            <a class="header-text" asp-page="./Index"
                                asp-route-sortColumn="@column.ColumnName"
                                asp-route-sortOrder="@column.GetNextSortOrder()">
                                 @column.GetFormattedTitle()
@@ -49,10 +51,10 @@
                     </td>
                     <td>
                         <div
-                            style="display: flex; justify-content: flex-end;">
+                            style="display: flex; justify-content: flex-end; ">
                             @foreach (var mood in item.Moods)
                             {
-                                <span style="font-size: 1.1em;" class="badge badge-primary mr-1">@Html.DisplayFor(modelItem => mood.Name)</span>
+                                <span style="font-size: 1.1em; background-color: #61C9A8; " class="badge badge-primary mr-1">@Html.DisplayFor(modelItem => mood.Name)</span>
                             }
                         </div>
                     </td>
@@ -76,7 +78,7 @@
        asp-route-sortOrder="@Model.MoodEntriesTable.GetCurrentlySortedColumn().CurrentSortOrder"
        asp-route-pageIndex="@(Model.MoodEntriesTable.PaginatedList.PageIndex - 1)"
        role="button"
-       class="@previousButtonCss">
+       class="btn-colour">
         Previous
     </a>
 
@@ -85,7 +87,7 @@
        asp-route-sortOrder="@Model.MoodEntriesTable.GetCurrentlySortedColumn().CurrentSortOrder"
        asp-route-pageIndex="@(Model.MoodEntriesTable.PaginatedList.PageIndex + 1)"
        role="button"
-       class="@nextButtonCss">
+       class="btn-colour">
         Next
     </a>
 </div>
