@@ -1,4 +1,5 @@
 @page
+@using Microsoft.Data.SqlClient
 @model MoodTracker.Pages.MoodEntries.IndexModel
 
 @{ ViewData["Title"] = "Index"; }
@@ -12,39 +13,79 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].MoodScore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoodEntry[0].Notes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.MoodEntry)
+
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                @foreach (var column in Model.MoodEntriesTable.Columns)
+                {
+                    <th scope="col" style="width: 25%">
+                        @if (column.Sortable)
+                        {
+                            <a asp-page="./Index"
+                               asp-route-sortColumn="@column.ColumnName"
+                               asp-route-sortOrder="@column.GetNextSortOrder()">
+                                @column.GetFormattedTitle()
+                            </a>
+                        }
+                        else
+                        {
+                            @column.GetFormattedTitle()
+                        }
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.MoodEntriesTable.PaginatedList)
         {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Date)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.MoodScore)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Notes)
-    </td>
-    <td>
-        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-        <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-    </td>
-</tr>}
-    </tbody>
-</table>
+                <tr style="cursor: pointer;" onclick="window.location='/MoodEntries/Details?id=@item.Id';">
+                    <th scope="row">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MoodScore)
+                    </td>
+                    <td>
+                        <div
+                            style="display: flex; justify-content: flex-end;">
+                            @foreach (var mood in item.Moods)
+                            {
+                                <span style="font-size: 1.1em;" class="badge badge-primary mr-1">@Html.DisplayFor(modelItem => mood.Name)</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+@{
+    string GenerateButtonCssClass(bool enabled) => "btn btn-primary" + (enabled ?  "" : " disabled");
+
+    var previousButtonCss = GenerateButtonCssClass(Model.MoodEntriesTable.PaginatedList.HasPreviousPage);
+    var nextButtonCss = GenerateButtonCssClass(Model.MoodEntriesTable.PaginatedList.HasNextPage);
+}
+
+<div
+    class="text-center">
+    <a asp-page="./Index"
+       asp-route-sortColumn="@Model.MoodEntriesTable.GetCurrentlySortedColumn().ColumnName"
+       asp-route-sortOrder="@Model.MoodEntriesTable.GetCurrentlySortedColumn().CurrentSortOrder"
+       asp-route-pageIndex="@(Model.MoodEntriesTable.PaginatedList.PageIndex - 1)"
+       role="button"
+       class="@previousButtonCss">
+        Previous
+    </a>
+
+    <a asp-page="./Index"
+       asp-route-sortColumn="@Model.MoodEntriesTable.GetCurrentlySortedColumn().ColumnName"
+       asp-route-sortOrder="@Model.MoodEntriesTable.GetCurrentlySortedColumn().CurrentSortOrder"
+       asp-route-pageIndex="@(Model.MoodEntriesTable.PaginatedList.PageIndex + 1)"
+       role="button"
+       class="@nextButtonCss">
+        Next
+    </a>
+</div>

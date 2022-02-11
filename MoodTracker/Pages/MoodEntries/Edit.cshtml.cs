@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -110,14 +109,7 @@ namespace MoodTracker.Pages.MoodEntries
                 }
 
             }
-
-            var a = string.Join(",",
-                    ModelState.Values.Where(E => E.Errors.Count > 0)
-                    .SelectMany(E => E.Errors)
-                    .Select(E => E.ErrorMessage + E.Exception)
-                    .ToArray());
-
-            var b = ModelState.Values.Where(E => E.Errors.Count > 0);
+            
             return RedirectToPage("./Index");
         }
 
