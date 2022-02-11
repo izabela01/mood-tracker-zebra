@@ -2,9 +2,11 @@
 @using Microsoft.Data.SqlClient
 @model MoodTracker.Pages.MoodEntries.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
+@{ ViewData["Title"] = "Index"; }
+@section Styles {
+    <link href="@Url.Content("/Styles/Create.css")" rel="stylesheet" type="text/css" />
 }
+
 
 <h1>Index</h1>
 

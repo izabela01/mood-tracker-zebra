@@ -1,6 +1,7 @@
 @page
 @model MoodTracker.Pages.MoodEntries.EditModel
 @using MoodTracker.Models
+@using System.ComponentModel.DataAnnotations
 
 @{ ViewData["Title"] = "Edit"; }
 
@@ -19,7 +20,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="MoodEntry.MoodScore" class="control-label"></label>
-                <input asp-for="MoodEntry.MoodScore" class="form-control" />
+                <input type="range" 
+                       min="@(((RangeAttribute) ViewData["MoodSliderRange"]).Minimum)" 
+                       max="@(((RangeAttribute) ViewData["MoodSliderRange"]).Maximum)" 
+                       asp-for="MoodEntry.MoodScore" class="form-control" />
                 <span asp-validation-for="MoodEntry.MoodScore" class="text-danger"></span>
             </div>
             <div class="form-group">

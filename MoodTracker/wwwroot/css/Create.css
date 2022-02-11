@@ -1,0 +1,66 @@
+﻿
+.container-whole{
+    display: flex;
+ justify-content: center;
+
+}
+
+.form-container {
+    background-color: #BDE0FE;
+    padding: 20px;
+    border-radius: 20px;
+    border-block-color: #A2D2FF;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    border: 10px solid #A2D2FF;
+}
+
+.the-text {
+    color: #000000;
+}
+
+@media only screen and (min-width: 600px) {
+    .form-container {
+       width: 40vw;
+       height: 70%;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .form-container {
+        width: 40vw;
+        height: 70%;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .form-container {
+        width: 70vw;
+    }
+}
+
+
+.form-create {
+    dislay: flex;
+}
+
+.submit {
+    align-self: center;
+    background-color: #f64f9e;
+    border: none;
+    border-radius: 10px;
+}
+
+
+
+.images-slider {
+display: flex; width: 100%; height: 40px; justify-content: space-between; 
+}
+
+
+.text-create {
+    color: #f64f9e;
+}
